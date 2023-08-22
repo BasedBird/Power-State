@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.changeColour = new System.Windows.Forms.Button();
             this.hello = new System.Windows.Forms.TextBox();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.powerPlanIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsSave = new System.Windows.Forms.ToolStripMenuItem();
             this.tsExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,11 +60,11 @@
             this.hello.Text = "Hello World";
             this.hello.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // notifyIcon1
+            // powerPlanIcon
             // 
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
-            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            this.powerPlanIcon.Text = "PowerPlan";
+            //this.powerPlanIcon.Visible = true;
+            this.powerPlanIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.powerPlanIcon_MouseDoubleClick);
             // 
             // contextMenu
             // 
@@ -125,7 +125,7 @@
 
         private System.Windows.Forms.Button changeColour;
         private System.Windows.Forms.TextBox hello;
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.NotifyIcon powerPlanIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem tsSave;
         private System.Windows.Forms.ToolStripMenuItem tsExit;

@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Learning4
 {
@@ -18,34 +19,35 @@ namespace Learning4
         String currentDir;
         System.Diagnostics.Process proc;
         static string currPlan = "";
-        static string prevPlan = "";
 
         public Form1()
         {
             InitializeComponent();
             rand = new Random();
-            notifyIcon1.ContextMenuStrip = contextMenu;
             currentDir = Directory.GetCurrentDirectory();
 
-            // Minimize form on startup and displayer on system tray
+            // Minimize form on startup and display on system tray
             this.WindowState = FormWindowState.Minimized;
-            notifyIcon1.Icon = SystemIcons.Application;
             this.ShowInTaskbar = false;
-            notifyIcon1.Visible = true;
+            powerPlanIcon.Icon = SystemIcons.Application;
 
             proc = new System.Diagnostics.Process();
             proc.StartInfo.FileName = "checkPlan.vbs";
             proc.StartInfo.WorkingDirectory = currentDir + "\\power";
             proc.Start();
-
-            System.Threading.Thread.Sleep(1000);
+            proc.WaitForExit();
 
             string text = File.ReadAllText(currentDir + "\\power\\plan.txt");
-            text = text.Substring(text.IndexOf("(") + 1);
-            text = text.Remove(text.IndexOf(")"));
-            currPlan = text;
-            update();
+            int start = text.IndexOf("(") + 1;
+            int length = text.IndexOf(")") - start;
+            currPlan = text.Substring(start, length);
 
+            powerPlanIcon.ContextMenuStrip = contextMenu;
+            powerPlanIcon.Icon = SystemIcons.Application;
+
+            System.Diagnostics.Debug.WriteLine(currPlan);
+            update();
+            powerPlanIcon.Visible = true;
         }
 
         private byte[] GetRandomBytes(int n)
@@ -57,22 +59,17 @@ namespace Learning4
 
         private void update()
         {
-
-            if (currPlan.Equals(prevPlan)) { }
-            else if (currPlan.Equals("High performance"))
+            if (currPlan.Equals("High performance"))
             {
-                notifyIcon1.Icon = Properties.Resources.red;
-                prevPlan = "High performance";
+                powerPlanIcon.Icon = Properties.Resources.red;
             }
             else if (currPlan.Equals("Balanced"))
             {
-                notifyIcon1.Icon = Properties.Resources.orange;
-                prevPlan = "Balanced";
+                powerPlanIcon.Icon = Properties.Resources.orange;
             }
             else
             {
-                notifyIcon1.Icon = Properties.Resources.green;
-                prevPlan = "Power saver";
+                powerPlanIcon.Icon = Properties.Resources.green;
             }
         }
 
@@ -88,19 +85,18 @@ namespace Learning4
 
             if (this.WindowState == FormWindowState.Minimized && MousePointerNotOnTaskBar)
             {
-                notifyIcon1.Icon = SystemIcons.Application;
                 this.ShowInTaskbar = false;
-                notifyIcon1.Visible = true;
+                powerPlanIcon.Visible = true;
             }
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void powerPlanIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             if (this.WindowState == FormWindowState.Normal)
             {
                 this.ShowInTaskbar = true;
-                notifyIcon1.Visible = false;
+                powerPlanIcon.Visible = false;
             }
         }
 
@@ -119,6 +115,7 @@ namespace Learning4
                 proc.StartInfo.FileName = "setPowerSaver.vbs";
                 proc.StartInfo.WorkingDirectory = currentDir + "\\power";
                 proc.Start();
+                proc.WaitForExit();
                 currPlan = "Power saver";
                 update();
             }
@@ -131,6 +128,7 @@ namespace Learning4
                 proc.StartInfo.FileName = "setBalanced.vbs";
                 proc.StartInfo.WorkingDirectory = currentDir + "\\power";
                 proc.Start();
+                proc.WaitForExit();
                 currPlan = "Balanced";
                 update();
             }
@@ -143,6 +141,7 @@ namespace Learning4
                 proc.StartInfo.FileName = "setHighPerformance.vbs";
                 proc.StartInfo.WorkingDirectory = currentDir + "\\power";
                 proc.Start();
+                proc.WaitForExit();
                 currPlan = "High performance";
                 update();
             }
